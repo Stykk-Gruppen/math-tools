@@ -51,19 +51,22 @@ int main(int argc, char *argv[])
 	for (int i = 0; i < a; i++)
 	{
 		std::cout << i << spacePadding(i) << "|  ";
+		bool isIdeal = false;
 		for (int j = 0; j < a; j++)
 		{
 			int temp = (i*j) % a;
 			if (i != 0 && j != 0 && temp == 0)
 			{
-				std::string str = "Z/";
-				str += std::to_string(i);
-				if (std::find(ideals.begin(), ideals.end(), str) == ideals.end())
-				{
-					ideals.push_back(str);
-				}
+				isIdeal = true;
 			}
 			std::cout << temp << spacePadding(temp);
+		}
+
+		if (isIdeal)
+		{
+			std::string str = "Z/";
+			str += std::to_string(i);
+			ideals.push_back(str);
 		}
 		std::cout << std::endl;
 	}
