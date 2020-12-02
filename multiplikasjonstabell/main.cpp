@@ -18,6 +18,47 @@ void help()
 	std::cout << "Usage: ./multiplikasjonstabell <integer>" << std::endl;
 }
 
+void printAddTable(int a)
+{
+	//Create table
+	std::vector<std::vector<int>> table(a, std::vector<int>(a));
+	for(int i = 0; i < table.size(); i++)
+	{
+		for(int j = 0; j < table.size(); j++)
+		{
+			table.at(i).at(j) = (i + j) % a;
+		}
+	}
+
+	std::cout << "Addisjonstabell:\n";
+	//Print Table top row
+	std::cout << "*  |";
+	for(int i = 0; i < a; i++)
+	{
+		std::cout << "  " << i;
+	}
+	std::cout << std::endl;
+
+	std::cout << "----";
+	for(auto v : table)
+		std::cout << "---";
+
+	std::cout << "\n";
+
+
+	for(int i = 0; i < table.size(); i++)
+	{
+		std::cout << i << "  |";
+
+		for(int j = 0; j < table.at(i).size(); j++)
+		{
+			std::cout << "  " << table.at(i).at(j);
+		}
+		std::cout << std::endl;
+	}
+	std::cout << "\n\n\n";
+}
+
 int main(int argc, char *argv[])
 {
 	int a;
@@ -37,6 +78,12 @@ int main(int argc, char *argv[])
 		help();
 		return 1;
 	}
+
+
+	printAddTable(a);
+
+
+	std::cout << "Multiplikasjonstabell:\n";
 	std::vector<std::string> ideals = {"Z/0"};
 	std::string dashes = "---";
 	std::cout << "*  |  ";
@@ -73,7 +120,7 @@ int main(int argc, char *argv[])
 	std::cout << std::endl << "Idealer: {";
 	for (int i = 0; i < ideals.size(); i++)
 	{
-		std::cout << ideals[i]; 
+		std::cout << ideals[i];
 		if (i < (ideals.size() - 1))
 		{
 			std::cout << ", ";
