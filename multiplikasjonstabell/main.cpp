@@ -28,17 +28,14 @@ int main(int argc, char *argv[])
 	}
 
 	std::string argument = argv[1];
-	if (argument != "--help" | argument != "-h")
+	try
 	{
-		try
-		{
-			a = std::stoi(argument);
-		}
-		catch (std::invalid_argument const &e)
-		{
-			help();
-			return 1;
-		}
+		a = std::stoi(argument);
+	}
+	catch (std::invalid_argument const &e)
+	{
+		help();
+		return 1;
 	}
 	std::vector<std::string> ideals = {"Z/0"};
 	std::string dashes = "---";
