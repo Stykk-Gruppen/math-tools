@@ -40,6 +40,15 @@ void printMultiplicationTable(std::vector<std::vector<int>> matrixVector, std::v
 	int rowsAndColumns = matrixVector.size();
 	for(int row=-1;row<rowsAndColumns;row++){
 		for(int column=-1;column<rowsAndColumns;column++){
+			if(row == 0 && column == -1){
+				for(size_t i=0;i<matrixVector.size()+1;i++){
+					std::cout<< "--------";
+				}
+				std::cout << std::endl;
+			}
+			if(column == 0){
+				std::cout << "| ";
+			}
 			if(row == -1 && column == -1){
 				std::cout << "(";
 				for(size_t i=0;i<matrixVector[0].size();i++){
