@@ -9,6 +9,26 @@ void help()
 	std::cout << "Usage: ./perm matrix1 matrix2 ... matrixK" << std::endl;
 }
 
+bool compareMatrix(std::vector<int> v1, std::vector<int> v2){
+	for(size_t i=0;i<v1.size();i++){
+		if(v1[i] != v2[i]){
+			return false;
+		}
+	}
+	return true;
+}
+
+int findAlias(std::vector<std::vector<int>> matrixVector, std::vector<int> matrix){
+	for(size_t i=0;i<matrixVector.size();i++){
+		if(compareMatrix(matrixVector[i],matrix)){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+
 void printVector(std::vector<int> v){
 	std::cout << "(";
 	for(size_t i=0;i<v.size();i++){
@@ -20,11 +40,19 @@ void printVector(std::vector<int> v){
 	std::cout << ")";
 }
 
+void printAliasVector(std::vector<std::vector<int>> matrixVector){
+	for(size_t i=0;i<matrixVector.size();i++){
+		std::cout << "s" << i << " ";
+		printVector(matrixVector[i]);
+		std::cout << std::endl;
+	}
+}
+
 std::vector<int> matrixMultiplication(std::vector<int> matrixA, std::vector<int> matrixB){
 	std::vector<int> output;
 	if(matrixA.size() != matrixB.size()){
 		help();
-		exit;
+		return output;
 	}
 
 	for(size_t i=0;i<matrixB.size();i++){
@@ -34,6 +62,34 @@ std::vector<int> matrixMultiplication(std::vector<int> matrixA, std::vector<int>
 	}
 
 	return output;
+}
+
+void printAliasTable(std::vector<std::vector<int>> matrixVector, std::vector<std::vector<std::vector<int>>> table){
+	int rowsAndColumns = matrixVector.size();
+	for(int row=-1;row<rowsAndColumns;row++){
+		for(int column=-1;column<rowsAndColumns;column++){
+			if(row == 0 && column == -1){
+				for(size_t i=0;i<matrixVector.size()+1;i++){
+					std::cout<< "---";
+				}
+				std::cout << std::endl;
+			}
+			if(column == 0){
+				std::cout << "| ";
+			}
+			if(row == -1 && column == -1){
+				std::cout<< " *";
+			} else if(row == -1){
+				std::cout << "s" << findAlias(matrixVector,matrixVector[column]);
+			} else if(column == -1){
+				std::cout << "s" << findAlias(matrixVector,matrixVector[row]);
+			} else {
+				std::cout << "s" << findAlias(matrixVector,table[row][column]);
+			}
+			std::cout << " ";
+		}
+		std::cout << std::endl;
+	}
 }
 
 void printMultiplicationTable(std::vector<std::vector<int>> matrixVector, std::vector<std::vector<std::vector<int>>> table){
@@ -114,8 +170,15 @@ int main(int argc, char *argv[])
 		help();
 		return 1;
 	}
+
 	//printVector(matrixMultiplication(matrixVector[0],matrixVector[1]));
 	std::vector<std::vector<std::vector<int>>> matrixMultiplicationTable = createMultiplicationTable(matrixVector);
+
+	printAliasVector(matrixVector);
+	std::cout << std::endl;
+	printAliasTable(matrixVector,matrixMultiplicationTable);
+	std::cout << std::endl;
+	std::cout << std::endl;
 	printMultiplicationTable(matrixVector,matrixMultiplicationTable);
 	
 }
