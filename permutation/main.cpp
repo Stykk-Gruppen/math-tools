@@ -142,6 +142,44 @@ std::vector<std::vector<std::vector<int>>> createMultiplicationTable(std::vector
 	return output;
 }
 
+int faculty(int max){
+	int output = max;
+	for(int i=max-1;i>=1;i--){
+		output = output * i;
+	}
+	return output;
+}
+
+std::vector<int> getMatrix(int size){
+	std::vector<int> output;
+	for(int i=0;i<size;i++){
+		output.push_back(i+1);
+	}
+	return output;
+}
+
+std::vector<std::vector<int>> generateFullMatrixVector(int size){
+	std::vector<std::vector<int>> output;
+	std::vector<int> defaultMatrix = getMatrix(size);
+	output.push_back(defaultMatrix);
+	int fac = faculty(size);
+	int swapIndex = 0;
+	for(int i=0;i<fac-1;i++){
+		int swapInteger = defaultMatrix[swapIndex];
+		if(swapIndex == 3){
+			defaultMatrix[swapIndex] = defaultMatrix[0];
+			defaultMatrix[0] = swapInteger;
+		} else {
+			defaultMatrix[swapIndex] = defaultMatrix[swapIndex+1];
+			defaultMatrix[swapIndex+1] = swapInteger;
+		}
+		output.push_back(defaultMatrix);
+
+		swapIndex = (swapIndex + 1) % (size - 1);
+	}
+	return output;
+}
+
 int main(int argc, char *argv[])
 {
 	int matrixNumber = argc;
@@ -170,6 +208,8 @@ int main(int argc, char *argv[])
 		help();
 		return 1;
 	}
+
+	matrixVector = generateFullMatrixVector(3);
 
 	//printVector(matrixMultiplication(matrixVector[0],matrixVector[1]));
 	std::vector<std::vector<std::vector<int>>> matrixMultiplicationTable = createMultiplicationTable(matrixVector);
