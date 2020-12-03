@@ -7,6 +7,10 @@
 void help()
 {
 	std::cout << "Usage: ./perm matrix1 matrix2 ... matrixK" << std::endl;
+	std::cout << "Usage: ./perm s3" << std::endl;
+	std::cout << "Usage: ./perm d6" << std::endl;
+	std::cout << "Usage: ./perm d8" << std::endl;
+	std::cout << "Usage: ./perm d10" << std::endl;
 }
 
 bool compareMatrix(std::vector<int> v1, std::vector<int> v2){
@@ -142,83 +146,58 @@ std::vector<std::vector<std::vector<int>>> createMultiplicationTable(std::vector
 	return output;
 }
 
-int faculty(int max){
-	int output = max;
-	for(int i=max-1;i>=1;i--){
-		output = output * i;
-	}
-	return output;
-}
-
-std::vector<int> getMatrix(int size){
-	std::vector<int> output;
-	for(int i=0;i<size;i++){
-		output.push_back(i+1);
-	}
-	return output;
-}
-
-std::vector<std::vector<int>> generateFullMatrixVector(int size){
-	std::vector<std::vector<int>> output;
-	std::vector<int> defaultMatrix = getMatrix(size);
-	output.push_back(defaultMatrix);
-	int fac = faculty(size);
-	int swapIndex = 0;
-	for(int i=0;i<fac-1;i++){
-		int swapInteger = defaultMatrix[swapIndex];
-		if(swapIndex == 3){
-			defaultMatrix[swapIndex] = defaultMatrix[0];
-			defaultMatrix[0] = swapInteger;
-		} else {
-			defaultMatrix[swapIndex] = defaultMatrix[swapIndex+1];
-			defaultMatrix[swapIndex+1] = swapInteger;
-		}
-		output.push_back(defaultMatrix);
-
-		swapIndex = (swapIndex + 1) % (size - 1);
-	}
-	return output;
-}
-
 int main(int argc, char *argv[])
 {
+	std::vector<std::vector<int>> matrixVector;
+	std::vector<std::vector<int>> s3 = {{1,2,3},{1,3,2},{2,1,3},{2,3,1},{3,2,1},{3,1,2}};
+	std::vector<std::vector<int>> d6 = {{1,2,3},{1,3,2},{2,1,3},{2,3,1},{3,2,1},{3,1,2}};
+	std::vector<std::vector<int>> d8 = {{1,2,3,4},{2,3,4,1},{3,4,1,2},{4,1,2,3},
+									{2,1,4,3},{4,3,2,1},{1,4,3,2},{3,2,1,4}};
+	std::vector<std::vector<int>> d10 = {{1,2,3,4,5},{2,3,4,5,1},{3,4,5,1,2},{4,5,1,2,3},{5,1,2,3,4},
+									{1,5,4,3,2},{3,2,1,5,4},{5,4,3,2,1},{2,1,5,4,3},{4,3,2,1,5}};
 	int matrixNumber = argc;
 	if (argc < 2)
 	{
 		help();
 		return 1;
-	}
-
-	std::vector<std::vector<int>> matrixVector; 
-	try
-	{
-		for(int i=1;i<matrixNumber;i++){
-			std::vector<int> tempVector;
-			std::string stringMatrix = argv[i];
-			for(size_t j=0;j<stringMatrix.size();j++){
-				int tempInt = ((int)stringMatrix[j])-48;
-				tempVector.push_back(tempInt);
+	} else if(argc == 2){
+		std::string m = argv[1];
+		if(m.compare("s3") == 0){
+			matrixVector = s3;
+		} else if(m.compare("d6") == 0){
+			matrixVector = d6;
+		} else if(m.compare("d8") == 0){
+			matrixVector = d8;
+		} else if(m.compare("d10") == 0){
+			matrixVector = d10;
+		} else {
+			help();
+			return 1;
+		}
+	} else if(argc >= 3){
+		try
+		{
+			for(int i=1;i<matrixNumber;i++){
+				std::vector<int> tempVector;
+				std::string stringMatrix = argv[i];
+				for(size_t j=0;j<stringMatrix.size();j++){
+					int tempInt = ((int)stringMatrix[j])-48;
+					tempVector.push_back(tempInt);
+				}
+				matrixVector.push_back(tempVector);
 			}
-			matrixVector.push_back(tempVector);
+		}
+		catch (std::invalid_argument const &e)
+		{
+			help();
+			return 1;
 		}
 	}
-
-	catch (std::invalid_argument const &e)
-	{
-		help();
-		return 1;
-	}
-
-	matrixVector = generateFullMatrixVector(3);
-
-	//printVector(matrixMultiplication(matrixVector[0],matrixVector[1]));
 	std::vector<std::vector<std::vector<int>>> matrixMultiplicationTable = createMultiplicationTable(matrixVector);
-
 	printAliasVector(matrixVector);
 	std::cout << std::endl;
 	printAliasTable(matrixVector,matrixMultiplicationTable);
 	std::cout << std::endl;
 	std::cout << std::endl;
 	printMultiplicationTable(matrixVector,matrixMultiplicationTable);
-	
 }
